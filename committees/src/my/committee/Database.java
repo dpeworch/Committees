@@ -46,16 +46,43 @@ public final class Database {
         }
     }
 
-    public void insertComm(String input) {
-            /*query = "INSERT INTO APP.PROFS (FIRST_NAME, LAST_NAME, DEPARTMENT, SCHOOL)"
+    public void addComm(String name, String desc, String members, String chair) {
+        try {
+            Statement s = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            String query = "INSERT INTO APP.COMMS (NAME, DESCRIPTION, CURRENT_MEMBERS, CHAIR)"
                     + " VALUES (?, ?, ?, ?)";
             PreparedStatement psInsert = conn.prepareStatement(query);
             //psInsert.setInt(1, 1956);
-            psInsert.setString(1, "Karen");
-            psInsert.setString(2, "Anewalt");
-            psInsert.setString(3, "CPSC");
-            psInsert.setString(4, "UMW");
-            psInsert.executeUpdate();*/
+            psInsert.setString(1, name);
+            psInsert.setString(2, desc);
+            psInsert.setString(3, members);
+            psInsert.setString(4, chair);
+            psInsert.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public void addProf(String first_name, String last_name, String department, String school,
+            String current_committees, String past_committees, String requested_committees) {
+        try {
+            Statement s = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            String query = "INSERT INTO APP.PROFS (FIRST_NAME, LAST_NAME, DEPARTMENT, SCHOOL, "
+                    + "CURRENT_COMMITTEES, PAST_COMMITTEES, REQUESTED_COMMITTEES)"
+                    + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement psInsert = conn.prepareStatement(query);
+            //psInsert.setInt(1, 1956);
+            psInsert.setString(1, first_name);
+            psInsert.setString(2, last_name);
+            psInsert.setString(3, department);
+            psInsert.setString(4, school);
+            psInsert.setString(5, current_committees);
+            psInsert.setString(6, past_committees);
+            psInsert.setString(7, requested_committees);
+            psInsert.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
     }
 
      public String search(String input) {
@@ -65,7 +92,8 @@ public final class Database {
          try {
             String result = "";
             Statement s = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            String query = "SELECT LAST_NAME, FIRST_NAME FROM APP.PROFS WHERE LOWER(FIRST_NAME) LIKE TRIM(LOWER('" + input + "%'))";
+            String query = "SELECT LAST_NAME, FIRST_NAME FROM APP.PROFS WHERE LOWER(FIRST_NAME) "
+                    + "LIKE TRIM(LOWER('" + input + "%'))";
             query += " OR LOWER(LAST_NAME) LIKE TRIM(LOWER('" + input + "%'))";
             query += " OR LOWER(DEPARTMENT) LIKE TRIM(LOWER('" + input + "%'))";
             query += " OR LOWER(SCHOOL) LIKE TRIM(LOWER('" + input + "%'))";
